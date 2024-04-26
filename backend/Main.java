@@ -12,7 +12,7 @@ public class Main {
         int n = sc.nextInt();
         ArrayList<String> lista = seleccionarPalabras(palabras.tecnologia[0], n);
         for(String elemento: lista){
-            System.out.print(elemento + ", ");
+            System.out.print("'"+elemento+"'" + ", ");
         }
     }
 
@@ -24,7 +24,7 @@ public class Main {
         ArrayList<String> lista = new ArrayList<>();
         for(int i = 0; i < listica.length; i++){
             if(listica[i].length() == n){
-                lista.add(listica[i]);
+                lista.add(listica[i].toUpperCase());
             }
         }
         return lista;
