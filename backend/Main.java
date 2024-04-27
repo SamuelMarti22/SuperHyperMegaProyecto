@@ -1,7 +1,7 @@
-package backend;
+package backend; 
 
 import java.util.Scanner;
-import java.util.Random;
+//import java.util.Random;
 import java.util.ArrayList;
 
 public class Main {
@@ -10,10 +10,11 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Palabras palabras = new Palabras();
         int n = sc.nextInt();
-        ArrayList<String> lista = seleccionarPalabras(palabras.tecnologia[0], n);
+        ArrayList<String> lista = seleccionarPalabras(palabras.tecnologia[3], n);
         for(String elemento: lista){
-            System.out.print("'"+elemento+"'" + ", ");
+            System.out.print('"'+elemento+'"' + ", ");
         }
+        sc.close();
     }
 
     public static void llenarSopa(ArrayList<Character> sopa) {
