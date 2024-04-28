@@ -11,6 +11,11 @@ public class Palabras{
         naturaleza[1] = new String[]{"LLUVIA","FLORES","ARROYO","MONTES","PASTOS","ORILLA","SELVAS","PRADERA","MONTAÑA","TRUENOS", "GLACIAR","MANADAS","PAJAROS","ENERGIA","BIOSFERA", "ORGÁNICO", "PETRÓLEO","BACTERIA", "DESIERTO", "INSECTOS"};
         naturaleza[2] = new String[]{"CHAPARRÓN", "ATMÓSFERA", "CLIMÁTICO", "EMISIONES", "EXTINCIÓN", "MARSUPIAL", "MIGRACIÓN","ACANTILADO", "ANTICICLÓN", "DEPREDADOR", "PEDÚNCULOS", "HIPOTÁLAMO", "FRAMESTONE", "MICROSCOPIO","COMBUSTIBLE", "PESTICIDAS", "CAPARAZONES", "BIOQUÍMICOS", "GENOTÍPICOS", "VOLCARENITA"};
 
+        //Definir palabras de acuerdo a cada nivel, siendo 0 fácil 2 Dificil para historia
+        historia[0] = new String[]{""};
+        historia[1] = new String[]{"GUERRA","ESTADO","SOCIAL", "SOVIET", "ATAQUE", "HUMANO", "CASTAS","IMPERIO", "BATALLA", "TRATADO", "COLONIA", "ELEGIAS", "PARTIDO", "SISTEMA","IMPERIO", "BATALLA", "TRATADO", "COLONIA", "ELEGIAS", "PARTIDO"};
+        historia[2] = new String[]{"REPÚBLICA", "CONQUISTA", "MONARQUÍA", "VERSALLES", "HISTÓRICO", "BIOGRAFÍA", "DICTADURA","ANTIGÜEDAD", "REVOLUCIÓN", "DEMOCRACIA", "FEUDALISMO", "INDUSTRIAL", "HOLOCAUSTO", "MODERNIDAD","CONFERENCIA", "ILUSTRACIÓN", "AUTOCRÁTICO", "TOTALITARIO", "PROVISIONAL", "OLIGARQUÍAS"};
+
         //Definir palabras de acuerdo a cada nivel, siendo 0 fácil 2 Dificil para tecnología
         tecnologia[0] = new String[]{"APP", "IOT", "CPU", "VPN", "API", "CSS", "LED","HTML","JAVA", "NODE", "RUBY","PERL", "WIFI", "CODE", "SWIFT", "MYSQL", "LINUX", "REACT", "ROBOT","MACOS"};
         tecnologia[1] = new String[]{"CODIGO","CAMARA","GADGET","TABLET","REDES","SENSOR","SCRIPT","BINARIO","CIFRADO","PIXELES","ARCHIVO","SISTEMA","TECLADO","DIGITAL","CONEXION","ROBOTICA","DESCARGA","BUSQUEDA","PROGRAMA","INTERNET"};
