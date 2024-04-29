@@ -5,10 +5,15 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+    public static Cronometro cronometroTotal = new Cronometro(); // Cronometro para ver el tiempo total del usuario
+    public static Cronometro cronometroPartes = new Cronometro(); // Cronometro para ver el tiempo que se demora entre
+                                                                  // cada palabra encontrada
+    public static int puntaje = 0;
+
     public static void main(String[] args) {
         // Inicializar Scanner
         Scanner sc = new Scanner(System.in);
-        // Creación de variables necesarias u objetos
+        // Creación de variables necesarias y objetos
         Palabras palabras = new Palabras();
         ArrayList<String> listaPalabras = new ArrayList<String>();
 
@@ -36,29 +41,44 @@ public class Main {
         } else {
             System.out.println("Ingresa un numero valido");
         }
-
         String[][] matriz = ponerPalabras(listaPalabras, dificultad);
-        for (String[] columna : matriz) {
-            System.out.print("| ");
-            for (String fila : columna) {
-                System.out.print(fila + " | ");
-            }
-            System.out.println();
-        }
+        String[][] solucion = copiarMatriz(matriz);
+        matriz = llenarSopa(matriz);
+        mostrarMatriz(matriz);
         System.out.println("Mira, estas palabas son las que tienes que encontrar");
         for (String palabra : listaPalabras) {
             System.out.println(palabra);
         }
+        cronometroTotal.comenzarCronometro();
+        cronometroPartes.comenzarCronometro();
 
         while (listaPalabras.size() > 0) {
             System.out.print("Ingresa la coordenada en (x,y) inicial de la palabra que crees encontrar: ");
-            String posicionInicial = sc.next();
-            String[] pInicial = posicionInicial.split(",");
+            String[] pInicial = sc.next().split(",");
             System.out.print("Ingresa la coordenada en (x,y) final de la palabra que crees encontrar: ");
             String[] pFinal = sc.next().split(",");
-            listaPalabras = comprobarPalabra(pInicial, pFinal, listaPalabras, matriz);
+            listaPalabras = comprobarPalabra(pInicial, pFinal, listaPalabras, matriz, solucion);
+        }
+
+        if (dificultad == 0) {
+            int puntajeTiempo = (-1 * cronometroTotal.segundos) + 180;
+            if (puntajeTiempo > 0) {
+                puntaje += puntajeTiempo;
+            }
+        } else if (dificultad == 1) {
+            int puntajeTiempo = (-1 * cronometroTotal.segundos) + 360;
+            if (puntajeTiempo > 0) {
+                puntaje += puntajeTiempo;
+            }
+        } else {
+            int puntajeTiempo = (-1 * cronometroTotal.segundos) + 520;
+            if (puntajeTiempo > 0) {
+                puntaje += puntajeTiempo;
+            }
         }
         System.out.println("Muy bien, ganates");
+        System.out.println("En total hiciste " + puntaje + " puntos");
+        cronometroTotal.detenerCronometro();
         sc.close();
     }
 
@@ -154,11 +174,16 @@ public class Main {
     }
 
     public static String[][] llenarSopa(String[][] sopaIncompleta) {
+        Random random = new Random();
         String[][] matrizLista = sopaIncompleta;
         for (int i = 0; i < sopaIncompleta.length; i++) {
             for (int j = 0; j < sopaIncompleta[i].length; j++) {
+                int indice = random.nextInt(26);
+                String letra = Character.toString((char) ('A' + indice));
                 if (matrizLista[i][j] == null) {
                     matrizLista[i][j] = " ";
+                } else if (matrizLista[i][j] == " ") {
+                    matrizLista[i][j] = letra;
                 }
             }
         }
@@ -223,51 +248,80 @@ public class Main {
     }
 
     public static ArrayList<String> comprobarPalabra(String[] pInical, String[] pFinal, ArrayList<String> palabra,
-            String[][] matriz) {
+            String[][] matriz, String[][] solucion) {
         int x1 = Integer.parseInt(pInical[0]);
         int y1 = Integer.parseInt(pInical[1]);
         int x2 = Integer.parseInt(pFinal[0]);
         int y2 = Integer.parseInt(pFinal[1]);
         String palabraCompleta = "";
-        if (x1 == x2) {
-            System.out.println("Palabra Horizontal");
-            int w = 0;
-            while (w < Math.abs((y1 - y2)) + 1) {
-                palabraCompleta = palabraCompleta + matriz[x1][y1 + w];
-                w += 1;
-            }
-        } else if (y1 == y2) {
-            System.out.println("Palabra Vertical");
-            int w = 0;
-            while (w < Math.abs((x1 - x2)) + 1) {
-                palabraCompleta = palabraCompleta + matriz[x1 + w][y1];
-                w += 1;
+        if (x1 == -1 || x2 == -1 || y1 == -1 || y2 == -1) {
+            System.out.println("Te has rendido, que tristeza, vea la solución, bobo");
+            mostrarMatriz(solucion);
+
+            palabra.clear();
+        } else {
+            if (x1 == x2) {
+                int w = 0;
+                while (w < Math.abs((y1 - y2)) + 1) {
+                    palabraCompleta = palabraCompleta + matriz[x1][y1 + w];
+                    w += 1;
+                }
+            } else if (y1 == y2) {
+                int w = 0;
+                while (w < Math.abs((x1 - x2)) + 1) {
+                    palabraCompleta = palabraCompleta + matriz[x1 + w][y1];
+                    w += 1;
+                }
+
+            } else if (((y1 - y2) / (x1 - x2)) == 1) {
+
+                int w = 0;
+                while (w < Math.abs((y1 - y2)) + 1) {
+                    palabraCompleta = palabraCompleta + matriz[x1 + w][y1 + w];
+                    w += 1;
+                }
+            } else {
+                System.out.println("Coordenadas no validas");
+                return palabra;
             }
 
-        } else if (((y1 - y2) / (x1 - x2)) == 1) {
-
-            int w = 0;
-            while (w < Math.abs((y1 - y2)) + 1) {
-                palabraCompleta = palabraCompleta + matriz[x1 + w][y1 + w];
-                w += 1;
+            if (palabra.contains(palabraCompleta)) {
+                palabra.remove(palabraCompleta);
+                System.out.println("Se ha encontrado la palabra " + palabraCompleta);
+                int bonus = (-10 * (cronometroPartes.segundos)) + 90;
+                if (bonus > 0) {
+                    puntaje += bonus;
+                    System.out.println("Que rápido! tienes " + bonus + " puntos extras");
+                }
+                cronometroPartes.detenerCronometro();
+                cronometroPartes.comenzarCronometro();
+            } else {
+                System.out.println("No pelao, no se encontró la palabra pa");
             }
-        } else {
-            System.out.println("Coordenadas no validas");
-            return palabra;
-        }
-        if (palabra.contains(palabraCompleta)) {
-            palabra.remove(palabraCompleta);
-            System.out.println("Se ha encontrado la palabra" + palabraCompleta);
-        } else {
-            System.out.println("No pelao, no se encontró la palabra pa" + palabraCompleta);
         }
         return palabra;
     }
+    public static void mostrarMatriz(String[][] matriz) {
+        for (String[] columna : matriz) {
+            System.out.print("| ");
+            for (String fila : columna) {
+                System.out.print(fila + " | ");
+            }
+            System.out.println();
+        }
+    }
+    public static String[][] copiarMatriz(String[][] matriz) {
+        // Crear una nueva matriz para almacenar la copia
+        String[][] copia = new String[matriz.length][matriz[0].length];
+        
+        // Copiar los elementos de la matriz original a la copia
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[0].length; j++) {
+                copia[i][j] = matriz[i][j];
+            }
+        }
+        
+        // Devolver la copia de la matriz
+        return copia;
+    }
 }
-
-// matrizL = matriz[x + w][y];
-// palabraL = Character.toString(palabra.charAt(w));
-// if (matrizL.equals(palabraL) || matrizL.equals(" ")) {
-// matriz[x + w][y] = palabraL;
-// w += 1;
-// }
