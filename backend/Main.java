@@ -45,6 +45,20 @@ public class Main {
             }
             System.out.println();
         }
+        System.out.println("Mira, estas palabas son las que tienes que encontrar");
+        for (String palabra : listaPalabras) {
+            System.out.println(palabra);
+        }
+
+        while (listaPalabras.size() > 0) {
+            System.out.print("Ingresa la coordenada en (x,y) inicial de la palabra que crees encontrar: ");
+            String posicionInicial = sc.next();
+            String[] pInicial = posicionInicial.split(",");
+            System.out.print("Ingresa la coordenada en (x,y) final de la palabra que crees encontrar: ");
+            String[] pFinal = sc.next().split(",");
+            listaPalabras = comprobarPalabra(pInicial, pFinal, listaPalabras, matriz);
+        }
+        System.out.println("Muy bien, ganates");
         sc.close();
     }
 
@@ -54,49 +68,13 @@ public class Main {
         String[][] matriz;
         int i = 0;
         if (dificultad == 0) {
-            matriz = new String[10][10];
-            matriz = llenarSopa(matriz);
-            String palabra = listaPalabras.get(7);
-            while (i < palabra.length()) {
-                matriz[1 + i][1 + i] = Character.toString(palabra.charAt(i));
-                i += 1;
-            }
-            i = 0;
-            palabra = listaPalabras.get(6);
-            while (i < palabra.length()) {
-                matriz[1 + i][8] = Character.toString(palabra.charAt(i));
-                i += 1;
-            }
-
+            matriz = inicializar(10, 7, listaPalabras, 8);
         } else if (dificultad == 1) {
-            matriz = new String[15][15];
-            matriz = llenarSopa(matriz);
-            String palabra = listaPalabras.get(12);
-            while (i < palabra.length()) {
-                matriz[1 + i][1 + i] = Character.toString(palabra.charAt(i));
-                i += 1;
-            }
-            i = 0;
-            palabra = listaPalabras.get(11);
-            while (i < palabra.length()) {
-                matriz[1 + i][8] = Character.toString(palabra.charAt(i));
-                i += 1;
-            }
+            matriz = inicializar(15, 12, listaPalabras, 8);
         } else {
-            matriz = new String[20][20];
-            matriz = llenarSopa(matriz);
-            String palabra = listaPalabras.get(17);
-            while (i < palabra.length()) {
-                matriz[1 + i][1 + i] = Character.toString(palabra.charAt(i));
-                i += 1;
-            }
-            i = 0;
-            palabra = listaPalabras.get(16);
-            while (i < palabra.length()) {
-                matriz[1 + i][10] = Character.toString(palabra.charAt(i));
-                i += 1;
-            }
+            matriz = inicializar(20, 17, listaPalabras, 10);
         }
+
         i = listaPalabras.size() - 3;
         while (i >= 0 && i <= listaPalabras.size() - 3) {
             String palabra = listaPalabras.get(i);
@@ -224,6 +202,66 @@ public class Main {
             }
         }
         return lista;
+    }
+
+    public static String[][] inicializar(int tamano, int posicion, ArrayList<String> listaPalabras, int posicion2) {
+        String[][] matriz = new String[tamano][tamano];
+        int i = 0;
+        matriz = llenarSopa(matriz);
+        String palabra = listaPalabras.get(posicion);
+        while (i < palabra.length()) {
+            matriz[1 + i][1 + i] = Character.toString(palabra.charAt(i));
+            i += 1;
+        }
+        i = 0;
+        palabra = listaPalabras.get(posicion - 1);
+        while (i < palabra.length()) {
+            matriz[1 + i][posicion2] = Character.toString(palabra.charAt(i));
+            i += 1;
+        }
+        return matriz;
+    }
+
+    public static ArrayList<String> comprobarPalabra(String[] pInical, String[] pFinal, ArrayList<String> palabra,
+            String[][] matriz) {
+        int x1 = Integer.parseInt(pInical[0]);
+        int y1 = Integer.parseInt(pInical[1]);
+        int x2 = Integer.parseInt(pFinal[0]);
+        int y2 = Integer.parseInt(pFinal[1]);
+        String palabraCompleta = "";
+        if (x1 == x2) {
+            System.out.println("Palabra Horizontal");
+            int w = 0;
+            while (w < Math.abs((y1 - y2)) + 1) {
+                palabraCompleta = palabraCompleta + matriz[x1][y1 + w];
+                w += 1;
+            }
+        } else if (y1 == y2) {
+            System.out.println("Palabra Vertical");
+            int w = 0;
+            while (w < Math.abs((x1 - x2)) + 1) {
+                palabraCompleta = palabraCompleta + matriz[x1 + w][y1];
+                w += 1;
+            }
+
+        } else if (((y1 - y2) / (x1 - x2)) == 1) {
+
+            int w = 0;
+            while (w < Math.abs((y1 - y2)) + 1) {
+                palabraCompleta = palabraCompleta + matriz[x1 + w][y1 + w];
+                w += 1;
+            }
+        } else {
+            System.out.println("Coordenadas no validas");
+            return palabra;
+        }
+        if (palabra.contains(palabraCompleta)) {
+            palabra.remove(palabraCompleta);
+            System.out.println("Se ha encontrado la palabra" + palabraCompleta);
+        } else {
+            System.out.println("No pelao, no se encontró la palabra pa" + palabraCompleta);
+        }
+        return palabra;
     }
 }
 
