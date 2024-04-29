@@ -79,6 +79,7 @@ public class Main {
         System.out.println("Muy bien, ganates");
         System.out.println("En total hiciste " + puntaje + " puntos");
         cronometroTotal.detenerCronometro();
+        System.exit(0);
         sc.close();
     }
 
@@ -257,7 +258,8 @@ public class Main {
         if (x1 == -1 || x2 == -1 || y1 == -1 || y2 == -1) {
             System.out.println("Te has rendido, que tristeza, vea la solución, bobo");
             mostrarMatriz(solucion);
-
+            System.out.println("Tienes 0 puntos");
+            System.exit(0);
             palabra.clear();
         } else {
             if (x1 == x2) {
